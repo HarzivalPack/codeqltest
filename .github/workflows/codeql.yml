@@ -1,0 +1,29 @@
+name: "CodeQL"
+on:
+  pull_request:
+jobs:
+  analyze:
+    runs-on: windows-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    strategy:
+      matrix:
+        language: [csharp]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+          build-mode: none
+      - uses: github/codeql-action/analyze@v3
+      - name: Check marker
+        shell: pwsh
+        run: |
+          if (Test-Path C:\poc_marker.txt) {
+            Write-Host "RCE: injected PowerShell executed on the runner"
+            exit 1
+          } else {
+            Write-Host "No marker found"
+          }
